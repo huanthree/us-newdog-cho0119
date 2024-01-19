@@ -1,1 +1,25 @@
-aaaa
+name: 定时更新 README
+
+on:
+  schedule:
+    - cron: '0 */2 * * *' # 每2小时触发一次
+
+jobs:
+  update-readme:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout 代码
+      uses: actions/checkout@v2
+      
+    - name: 更新 README
+      run: |
+        # 更新 runtime.txt 文件
+        echo $(date "+%Y-%m-%d %H:%M:%S") > runtime.txt
+
+        # 提交更改到仓库
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        git add .
+        git commit -m "自动更新 runtime.txt"
+        git push --quiet "https://${{ secrets.GITHUB_TOKEN }}@github.com/huanthree/us-newdog-cho0119.git"
